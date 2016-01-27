@@ -36,22 +36,22 @@ io.on('connection', function (socket) {
         console.log("----------------------");
         console.log(socket.id);
         console.log("----------------------");
-        console.log(socket);
+        // console.log(socket);
         // console.log(socket.id);
         // tell the client to execute 'new message'
-        io.sockets.sockets[socket.id].broadcast.emit('new message', {
-            username: socket.username,
-            message: data,
-            id: socket.id
-        });
-        console.log(typeof(io.sockets.sockets[socket.id]));
-        console.log("============================================");
-        console.log(io.sockets.sockets[data]);
-        // io.sockets.sockets[socket.id].emit('new message', {
+        // io.sockets.sockets[socket.id].broadcast.emit('new message', {
         //     username: socket.username,
         //     message: data,
         //     id: socket.id
         // });
+        // console.log(typeof(io.sockets.sockets[socket.id]));
+        console.log("============================================");
+        // console.log(io.sockets.sockets[data]);
+        io.sockets.sockets[data].emit('new message', {
+            username: socket.username,
+            message: data,
+            id: socket.id
+        });
     });
 
     // when the client emits 'add user', this listens and executes
@@ -63,6 +63,7 @@ io.on('connection', function (socket) {
         userList.push(username);
         addedUser = true;
         socket.emit('login', {
+            id: socket.id,
             userList: userList,
             messageHistory: messageHistory
         });

@@ -1,3 +1,4 @@
+var id="";
 ;(function () {
     'use strict';
 
@@ -7,7 +8,6 @@
         '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
     ];
 
-    var id = "";
 
     function trim(str) {
         return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -109,6 +109,9 @@
                     message: id
                 });
                 // tell server to execute 'new message' and send along one parameter
+                if (message.length > 1) {
+                   id = message;
+                }
                 socket.emit('new message', id);
             }
         }
@@ -160,6 +163,7 @@
         });
 
         socket.on('login', function (data) {
+            id = data.id;
             console.info(socket);
             connected = true;
             var message = 'Welcome to chat, ' + username + '!';

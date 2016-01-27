@@ -1,7 +1,9 @@
 var express = require('express');
+var redis = require('socket.io-redis');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
+io.adapter(redis({ host: 'localhost', port: 6379 }));
 var port = 8008;
 var userList = [];
 var messageHistory = [];
@@ -29,11 +31,27 @@ io.on('connection', function (socket) {
             username: socket.username,
             message: data
         });
+        console.log(io.sockets.sockets[socket.id]);
+        console.log("######################");
+        console.log("----------------------");
+        console.log(socket.id);
+        console.log("----------------------");
+        console.log(socket);
+        // console.log(socket.id);
         // tell the client to execute 'new message'
-        socket.broadcast.emit('new message', {
+        io.sockets.sockets[socket.id].broadcast.emit('new message', {
             username: socket.username,
-            message: data
+            message: data,
+            id: socket.id
         });
+        console.log(typeof(io.sockets.sockets[socket.id]));
+        console.log("============================================");
+        console.log(io.sockets.sockets[data]);
+        // io.sockets.sockets[socket.id].emit('new message', {
+        //     username: socket.username,
+        //     message: data,
+        //     id: socket.id
+        // });
     });
 
     // when the client emits 'add user', this listens and executes

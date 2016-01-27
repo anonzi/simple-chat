@@ -7,6 +7,8 @@
         '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
     ];
 
+    var id = "";
+
     function trim(str) {
         return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     }
@@ -104,15 +106,17 @@
                 messageInput.value = '';
                 addChatMessage({
                     username: username,
-                    message: message
+                    message: id
                 });
                 // tell server to execute 'new message' and send along one parameter
-                socket.emit('new message', message);
+                socket.emit('new message', id);
             }
         }
 
         // Adds the visual chat message to the message list
         function addChatMessage(data) {
+            console.info(data);
+            console.info(data.id);
 
             var usernameDiv = '<span class="username" style="color:' + getUsernameColor(data.username) + ';">' + data.username + ': </span>';
             var messageBodyDiv = '<span class="messageBody">' + data.message.replace(/\r?\n/g, '<br />') + '</span>';
@@ -156,6 +160,7 @@
         });
 
         socket.on('login', function (data) {
+            console.info(socket);
             connected = true;
             var message = 'Welcome to chat, ' + username + '!';
             putChatHistory(data.messageHistory);
@@ -165,6 +170,8 @@
 
         // Whenever the server emits 'new message', update the chat body
         socket.on('new message', function (data) {
+            id = data.id;
+            console.info(data.id);
             addChatMessage(data);
         });
 
